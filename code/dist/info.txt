@@ -1,0 +1,10 @@
+P_Grid	Gekaufter Strom
+P_PV 	selbst produzieter Strom
+P_Akku	Strom aus Batteire -charge, +discharge
+P_Load	
+rel_Autonomy
+rel_SelfConsumption
+SOC		Füllstand Batterie
+P		aktueller Verbrauch
+E_Day
+E_Total

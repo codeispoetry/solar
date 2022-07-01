@@ -1,0 +1,23 @@
+version: '3.3'
+
+services:
+  webserver:
+    build: docker/.
+    ports:
+      - '9099:80'
+    volumes:
+    - ./code:/var/www/html
+    networks:
+      - solar
+
+  node:
+    build: docker/node
+    volumes:
+      - ./code:/var/www/html
+    command: npm run watch
+    working_dir: /var/www/html
+    networks:
+      - solar
+
+networks:
+  solar:
