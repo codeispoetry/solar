@@ -1,8 +1,6 @@
-<meta http-equiv="refresh" content="60; URL=write.php">
-
 <?php
 
-$db = new SQLite3('data/solar.db');
+$db = new SQLite3('/var/www/html/solar/dist/data/solar.db');
 $url = 'http://192.168.178.80/solar_api/v1/GetPowerFlowRealtimeData.fcgi';
 
 
@@ -34,5 +32,7 @@ foreach ($columns as $column) {
 
     printf('<li>%s: %s</li>', $column, $$column);
 }
-
+print_r($smt);
 $smt->execute();
+
+print_r($smt);

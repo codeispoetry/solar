@@ -23,6 +23,8 @@ log:
 	docker-compose logs -f node
 
 deploy:
-	rsync -rvt ./code/dist/ --exclude '*.mp*' sharepic:/var/www/rahelrose.de/
+	rsync -r code/dist pi:/var/www/html/solar
 
+get-db:
+	rsync pi:/var/www/html/solar/dist/data/solar.db code/dist/data/solar.db
 
