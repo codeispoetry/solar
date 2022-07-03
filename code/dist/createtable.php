@@ -4,8 +4,8 @@ $db = new SQLite3('data/solar.db');
 
 
 $db->exec(
-    'CREATE TABLE IF NOT EXISTS solar(
-		timestamp DATETIME PRIMARY KEY DEFAULT CURRENT_TIMESTAMP,
+    "CREATE TABLE IF NOT EXISTS solar(
+		timestamp DATETIME PRIMARY KEY DEFAULT (datetime('now','localtime')),
 		P_Grid	INTEGER,
 		P_PV 	INTEGER,
 		P_Akku	INTEGER,
@@ -16,5 +16,5 @@ $db->exec(
 		P		INTEGER,
 		E_Day	INTEGER,
 		E_Total INTEGER
-	)'
+	)"
 );

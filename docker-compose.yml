@@ -6,7 +6,9 @@ services:
     ports:
       - '9099:80'
     volumes:
-    - ./code:/var/www/html
+     - ./code:/var/www/html
+     - /etc/timezone:/etc/timezone:ro
+     - /etc/localtime:/etc/localtime:ro
     networks:
       - solar
 

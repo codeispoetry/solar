@@ -13,26 +13,41 @@
 $db = new SQLite3('data/solar.db');
 $sql = "
 	SELECT 
-		AVG(P_Load) AS p_load, 
+		AVG(P_Load) * -1 AS p_load, 
 		AVG(P_PV) AS p_pv, 
+		AVG(SOC) AS soc, 
+		AVG(P_grid) AS p_grid, 
+
 
 		strftime('%H:%M', timestamp) AS label 
 	FROM solar GROUP BY strftime('%Y%m%d%H0', timestamp) + strftime('%M', timestamp)/15
-	ORDER BY timestamp;";
+	ORDER BY timestamp
+	;";
 $results = $db->query($sql);
 
-$p_load = [];
-$p_pv = [];
+
 $labels = [];
+$data = [];
+
+$lines = ['p_load','p_pv','p_grid'];
+
 while ($row = $results->fetchArray()) {
-    $p_load[] = $row['p_load'];
-    $p_pv[] = $row['p_pv'];
+ 
+    array_walk(
+        $lines, function ($item) {
+            global $data, $row;
+            $data[$item] .= max(0, $row[$item]) . ',';
+        }
+    );
+
     $labels[] = $row['label'];
 }
-$p_load = join(',', $p_load);
-$p_pv = join(',', $p_pv);
 
 $labels = "'" . join("','", $labels) . "'";
+
+
+
+
 ?>
     <script src="/node_modules/chart.js/dist/chart.min.js"></script>
 
@@ -40,16 +55,34 @@ $labels = "'" . join("','", $labels) . "'";
   
         const data = {
             labels: [<?php echo $labels; ?>],
-            datasets: [{
-                backgroundColor: 'rgb(255, 99, 132)',
-                borderColor: 'rgb(255, 0, 0)',
-                data: [<?php echo $p_load; ?>],
-            },
-            {
-                backgroundColor: 'rgb(0, 255, 0)',
-                borderColor: 'rgb(0, 255, 0)',
-                data: [<?php echo $p_pv; ?>],
-            }]
+            datasets: [
+           
+            <?php 
+                array_walk(
+                    $lines, function ($label) {
+                        global $data;
+                        static $i=0;
+                        
+                        $colors = ['red','green','blue','orange','violet'];
+
+
+                        echo "
+							{
+								label: '$label',
+								backgroundColor: '{$colors[$i]}',
+								borderColor: '{$colors[$i]}',
+								data: [{$data[$label]}],
+							},
+						";
+
+                        $i++;
+
+                    } 
+                ); 
+            
+                ?>
+            
+        ]
         };
 
         const config = {
@@ -59,8 +92,8 @@ $labels = "'" . join("','", $labels) . "'";
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins:{
-                legend: {
-                    display: false
+                    legend: {
+                        display: true
                     },
                 },
             }

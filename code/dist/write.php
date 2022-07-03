@@ -1,4 +1,4 @@
-<meta http-equiv="refresh" content="5; URL=write.php">
+<meta http-equiv="refresh" content="60; URL=write.php">
 
 <?php
 
